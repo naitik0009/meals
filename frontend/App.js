@@ -1,8 +1,10 @@
 import { StatusBar as Status } from 'expo-status-bar';
 import React from 'react';
+import RestaurantRequest from "./source/services/restaurant/restaurant.service";
 import { NavigationContainer } from '@react-navigation/native';
 import RestroScreen from './source/functions/restro/screens/restro-screen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {RestaurantContextProvider}  from './source/services/restaurant/restaurant.context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 export default function App() {
 
@@ -10,12 +12,14 @@ export default function App() {
   const tab = createBottomTabNavigator(); 
   return (
     <>
+
+<RestaurantContextProvider>
+
  <NavigationContainer>
       <tab.Navigator 
        screenOptions={({ route }) => ({
         tabBarIcon: ({ color, size }) => {
           let iconName;
-
           if (route.name === 'Restaurants') {
             iconName ="md-restaurant";
           } else if (route.name === 'settings') {
@@ -27,17 +31,14 @@ export default function App() {
         },
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
-      })}
-      
-      
-      
-      >
+      })}>
         <tab.Screen name="Restaurants" component={RestroScreen} />
         <tab.Screen name="Map" component={RestroScreen} />
         <tab.Screen name="settings" component={RestroScreen} />
       </tab.Navigator>
     </NavigationContainer>
-    
+
+    </RestaurantContextProvider>
       <Status style="dark" />
     </>
   );

@@ -1,11 +1,19 @@
-import React , {useState} from "react";
-import { StyleSheet, Text, SafeAreaView, Platform, View, StatusBar,FlatList } from 'react-native';
+import React , {useState,useContext} from "react";
+import { StyleSheet, Text,ActivityIndicator, SafeAreaView, Platform, View, StatusBar,FlatList } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import RestroInfo from "../components/restro-info";
+import { RestaurantContext } from "../../../services/restaurant/restaurant.context";
+
+
 const isAndroid = Platform.OS === "android";
+
 const RestroScreen= ()=>{
     const [search,setSearch]  = useState(null);
-    return(  <SafeAreaView style={[{ flex: 1 },{marginTop:isAndroid?StatusBar.currentHeight:0}]}>
+    const resturantContext = useContext(RestaurantContext);
+
+    console.log(resturantContext.restro,"here is state")
+    return( 
+      <SafeAreaView style={[{ flex: 1 },{marginTop:isAndroid?StatusBar.currentHeight:0}]}>
         <View style={styles.container} >
           <Searchbar placeholder='search'
           onChangeText={(data)=>{setSearch(data)}}
@@ -13,13 +21,11 @@ const RestroScreen= ()=>{
           />
         </View>
         <View style={styles.container1}>
-        <FlatList
-        data={[{name:1},{name:2},{name:3},{name:4}]}
+       {resturantContext.isLoading?<View style={{flexDirection:"column"}}><ActivityIndicator style={{marginTop:100}}  size="large" color="black"/><Text style={{textAlign:"center",fontSize:15,margin:5}}>Loading</Text></View> : <FlatList 
+        data={resturantContext.restro}
         renderItem={()=> (<RestroInfo/>)}
         keyExtractor={item => item.name}
-        contentContainerStyle={[{padding:15}]}
-      />
-          
+        contentContainerStyle={[{padding:15}]}/> } 
         </View>
       </SafeAreaView>);
 }
